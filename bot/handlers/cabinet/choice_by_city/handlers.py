@@ -36,9 +36,10 @@ async def close_city(callback: types.CallbackQuery, state: FSMContext):
 
 
 async def choice_venue(callback: types.CallbackQuery, state: FSMContext):
-    print(callback.data)
     callback_data = VenuesCallback.unwrap(callback.data)
     callback_data_back = callback_data.additional_values or CitiesCallback(page=1).pack()
+    print(callback.data)
+    print(callback_data)
 
     await Venue.show_venues(
         state=state,

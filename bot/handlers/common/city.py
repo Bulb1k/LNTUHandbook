@@ -57,7 +57,6 @@ class City(Pagination):
                 "next": callback_cities.pack_event_by_next_page()
             },
             additional_buttons=[{"text": texts.keyboards.CLOSE, "callback_data": "close_choice_city"}]
-
         )
 
         msg_for_delete = data.get('msg_for_delete', [])
