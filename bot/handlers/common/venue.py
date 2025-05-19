@@ -36,7 +36,7 @@ class Venue(Pagination):
         data = await state.get_data()
 
         response = await HttpData.get_venues(VenuesDto(
-            city_id=city_id if city_id is None else data.get('city', 1).get('id'),
+            city_id=city_id if city_id is None else 1,
             has_event=True,
             page=current_page,
         ))
@@ -49,7 +49,7 @@ class Venue(Pagination):
             return
 
         callback_venues = VenuesCallback(
-            city_id=city_id if city_id is None else data.get('city', 1).get('id'),
+            city_id=city_id if city_id is None else 1),
             page=current_page,
         )
 
