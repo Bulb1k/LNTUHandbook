@@ -147,7 +147,7 @@ class Event(Pagination):
             event['is_subscription'] = False
 
         kb = event_details_kb(
-            event_url=event.get('concert_event_page'),
+            event_url=event.get('concert_event_page') if event.get("custom_url") is None else event.get("custom_url"),
             event_id=event_id,
             is_subscription=event['is_subscription'],
             callback_button_back=callback_button_back
