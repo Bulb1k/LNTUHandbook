@@ -2,7 +2,11 @@ from aiogram import types
 from aiogram.fsm.context import FSMContext
 
 from bot import bot
-from keyboards.inline.callback import SubList, SubCityCallback, SubActionCityCallback, SubActionEventCallback
+from handlers.common.event import Event
+from keyboards.inline.callback import (
+    SubList, SubCityCallback,
+    SubActionCityCallback, SubActionEventCallback,
+    SubEventDetailsCallback)
 from handlers.common.subscription import Subscription
 
 async def subscriptions(callback: types.CallbackQuery, state: FSMContext):
@@ -73,3 +77,13 @@ async def close_subscriptions(callback: types.CallbackQuery, state: FSMContext):
 
     await callback.message.delete()
     await state.update_data(msg_for_delete=[])
+
+async def event_details(callback: types.CallbackQuery, state: FSMContext):
+    callback_data = SubEventDetailsCallback.unwrap(callback.data)
+
+    await Event.show_event_details(
+        state=state,
+        event_id=callback_data.event_id,
+        callback_button_back=SubList(type_sub="events").wrap(),
+        message=callback.message
+    )

@@ -89,20 +89,6 @@ def build_subscription_paginated_keyboard(
         updated_actions.append(action_unsub)
         schema.append(2)
 
-    change_type_sub = [
-        {
-            "text": "✅ Події" if type_sub == "events" else "Події",
-            "callback_data": SubList(page=number_page['current'], type_sub="events")
-        },
-        {
-            "text": "✅ Міста" if type_sub == "cities" else "Міста",
-            "callback_data": SubList(page=number_page['current'], type_sub="cities")
-        }
-    ]
-    for action in change_type_sub:
-        updated_actions.append(action)
-    schema.append(2)
-
     if number_page['max'] > 1:
 
         navigation_actions = [
@@ -124,13 +110,26 @@ def build_subscription_paginated_keyboard(
 
         schema.append(3)
 
+    change_type_sub = [
+        {
+            "text": "✅ Події" if type_sub == "events" else "Події",
+            "callback_data": SubList(page=number_page['current'], type_sub="events")
+        },
+        {
+            "text": "✅ Міста" if type_sub == "cities" else "Міста",
+            "callback_data": SubList(page=number_page['current'], type_sub="cities")
+        }
+    ]
+    for action in change_type_sub:
+        updated_actions.append(action)
+    schema.append(2)
+
     if additional_buttons is not None:
         for action in additional_buttons:
             updated_actions.append(action)
         for _ in range(len(additional_buttons)):
             schema.append(1)
-    for action in updated_actions:
-        print(action)
+
     kb = InlineConstructor.create_kb(
         actions=updated_actions, schema=schema)
 

@@ -110,12 +110,12 @@ class HttpUser(HttpClient):
         return await cls.request(path='/update', method='POST', data=data, headers=bearer_token.to_payload())
 
     @classmethod
-    async def get_subscribe(cls, bearer_token: single_dto.BearerTokenDto):
-        return await cls.request(path='/get_subscribe', method='GET', headers=bearer_token.to_payload())
+    async def get_subscribe(cls, bearer_token: single_dto.BearerTokenDto, page=1):
+        return await cls.request(path=f'/get_subscribe?page={page}', method='GET', headers=bearer_token.to_payload())
 
     @classmethod
-    async def get_city_subscribe(cls, bearer_token: single_dto.BearerTokenDto):
-        return await cls.request(path='/get_city_subscribe', method='GET', headers=bearer_token.to_payload())
+    async def get_city_subscribe(cls, bearer_token: single_dto.BearerTokenDto, page=1):
+        return await cls.request(path=f'/get_city_subscribe?page={page}', method='GET', headers=bearer_token.to_payload())
 
     @classmethod
     async def subscribe(cls, data: single_dto.EventIdDto, bearer_token: single_dto.BearerTokenDto):

@@ -134,7 +134,7 @@ class Event(Pagination):
         else:
             return
 
-        response = await HttpUser.get_subscribe(BearerTokenDto(data.get('token')))
+        response = await HttpUser.get_subscribe(bearer_token=BearerTokenDto(data.get('token')))
         if response.get('code') != 200:
             return await independent_message(texts.services.SERVICE_ERROR.format(error=response.get('message', '')))
 

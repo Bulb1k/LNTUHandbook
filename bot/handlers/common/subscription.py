@@ -10,7 +10,7 @@ from data.logger_config import logger
 from handlers.common.helper import independent_message
 from handlers.common.paginated import Pagination
 from keyboards.inline import build_paginated_keyboard, build_subscription_paginated_keyboard
-from keyboards.inline.callback import SubEventDetailsCallback, SubCityCallback
+from keyboards.inline.callback import SubEventDetailsCallback, SubCityCallback, VenuesCallback
 from state import CabinetState
 from texts import texts
 from services.http_client import HttpUser
@@ -53,9 +53,9 @@ class Subscription(Pagination):
         data = await state.get_data()
 
         if type_sub == "events":
-            response = await HttpUser.get_subscribe(BearerTokenDto(data.get('token')))
+            response = await HttpUser.get_subscribe(page=current_page, bearer_token=BearerTokenDto(data.get('token')))
         elif type_sub == "cities":
-            response = await HttpUser.get_city_subscribe(BearerTokenDto(data.get('token')))
+            response = await HttpUser.get_city_subscribe(page=current_page, bearer_token=BearerTokenDto(data.get('token')))
         else:
             raise NotImplementedError
 
@@ -66,7 +66,7 @@ class Subscription(Pagination):
 
         # if len(subscriptions) <= 0:
         #     return cls._dont_have_sub(type_sub, state, **kwargs)
-        if current_page > pagination.get('current_page'):
+        if current_page > pagination['last_page'] or current_page <= 0:
             return
 
         button_back = {"text": texts.keyboards.CLOSE, "callback_data": "close_sub"}
@@ -76,7 +76,7 @@ class Subscription(Pagination):
         kb_subscribe_event_actions = []
         for subscription in subscriptions:
             if type_sub == "cities":
-                callback_data = SubCityCallback(
+                callback_data = VenuesCallback(
                     city_id=subscription.get('id'),
                 )
                 text = subscription.get("name")
@@ -88,12 +88,12 @@ class Subscription(Pagination):
             else:
                 raise NotImplementedError
 
-            kb_subscribe_event_actions = [
+            kb_subscribe_event_actions.append(
                 {
                     "text": text,
                     "callback_data": callback_data
                 }
-            ]
+            )
 
         kb = build_subscription_paginated_keyboard(
             number_page={'max': pagination.get('last_page'), 'current': int(current_page)},

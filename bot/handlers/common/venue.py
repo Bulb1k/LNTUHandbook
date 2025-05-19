@@ -45,7 +45,7 @@ class Venue(Pagination):
         venues = response.get('data', [])
         pagination = response.get('pagination')
 
-        if current_page > pagination['current_page'] or current_page <= 0:
+        if current_page > pagination['last_page'] or current_page <= 0:
             return
 
         callback_venues = VenuesCallback(

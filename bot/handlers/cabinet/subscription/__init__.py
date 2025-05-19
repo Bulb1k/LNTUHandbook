@@ -10,9 +10,11 @@ def prepare_router() -> Router:
 
     callback_list = [
         Handler(handlers.subscriptions, [F.data.startswith('sub:'), ]),
+        Handler(handlers.event_details, [F.data.startswith('event_sub:'), ]),
         Handler(handlers.close_subscriptions, [F.data.startswith('close_sub'), ]),
 
         Handler(handlers.unsubscribe_event, [F.data.startswith('sub_action_event:sub'),]),
+        Handler(handlers.unsubscribe_city, [F.data.startswith('sub_action_city:sub'),]),
         Handler(handlers.unsubscribe_city, [F.data.startswith('sub_action_city:sub'),]),
         # Handler(handlers.test, [F.data.startswith("venues")]),
     ]
