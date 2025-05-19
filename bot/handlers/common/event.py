@@ -80,7 +80,7 @@ class Event(Pagination):
         kb_event_actions = []
         for event in events[current_page - 1]:
             event_date = datetime.strptime(event.get('date'), "%Y-%m-%dT%H:%M:%S.%fZ")
-            text = f"{event_date.strftime("%d-%m")} | {event.get('title')} | {'✅' if event.get('has_free_seats') else '❌'}"
+            text = f"{event_date.strftime('%d-%m')} | {event.get('title')} | {'✅' if event.get('has_free_seats') else '❌'}"
 
             event_btn = {
                 "text": text,
