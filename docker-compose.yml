@@ -1,0 +1,50 @@
+services:
+  
+  ngrok:
+    image: ngrok/ngrok:latest
+    profiles: ["dev"]
+    command: http tgbot:8080
+    env_file:
+      - ./bot/.env
+    ports:
+      - "4040:4040"
+    depends_on:
+      - tgbot
+      
+  tgbot:
+    build:
+      context: bot
+      dockerfile: Dockerfile
+    env_file:
+      - ./bot/.env
+    volumes:
+      - ./bot:/bot
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.2.3-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass password
+    restart: on-failure
+    volumes:
+      - redis_data:/data
+
+
+  redisinsight:
+    image: redislabs/redisinsight:1.14.0
+    ports:
+      - "8001:8001"
+    volumes:
+      - redisinsight_data:/db
+    depends_on:
+      - redis
+
+
+volumes:
+  redis_data:
+  redisinsight_data:
