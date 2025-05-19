@@ -49,7 +49,7 @@ class Venue(Pagination):
             return
 
         callback_venues = VenuesCallback(
-            city_id=city_id if city_id is None else 1),
+            city_id=city_id if city_id is None else 1,
             page=current_page,
         )
 
