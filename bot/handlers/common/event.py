@@ -2,7 +2,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State
 
 from dto import EventDto
-from dto.single import BearerTokenDto, EventIdDto
+from dto.single import BearerTokenDto, EventIdDto, CityIdDto
 from keyboards.inline import build_paginated_keyboard, event_details_kb
 from keyboards.inline.callback import EventsCallback, EventDetailsCallback, EventsByDateCallback
 from services.http_client import HttpData, HttpUser
@@ -103,7 +103,15 @@ class Event(Pagination):
         )
         
         msg_for_delete = data.get('msg_for_delete', [])
-        msgs = await cls.send_message(reply_markup=kb, text=texts.asking.CHOICE_EVENT, **kwargs)
+
+        text = texts.asking.CHOICE_EVENT
+        if venue_id is not None:
+            text = texts.asking.CHOICE_EVENT_BY_VENUE.format(venue=events[0][0].get("venue_name"))
+        elif city_id is not None:
+            text = texts.asking.CHOICE_EVENT_BY_CITY.format(city=events[0][0].get("city_name"))
+
+
+        msgs = await cls.send_message(reply_markup=kb, text=text, **kwargs)
         msg_for_delete.append(msgs)
 
         if custom_state is not None:

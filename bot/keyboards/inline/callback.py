@@ -30,37 +30,10 @@ class ModCallbackData(CallbackData, prefix="callback"):
         try:
             instance = cls.unpack(value)
         except Exception:
-            try:
-                parts = value.split(":")
-                prefix = parts[0]
-                values = parts[1:] if len(parts) > 1 else []
-
-                all_fields = {}
-                for c in reversed(cls.__mro__):
-                    if hasattr(c, "__annotations__"):
-                        all_fields.update(c.__annotations__)
-
-                fields = {k: v for k, v in all_fields.items() if k != "additional_values"}
-                field_names = list(fields.keys())
-
-                kwargs = {}
-                for i, field_name in enumerate(field_names):
-                    if i < len(values):
-                        field_type = fields[field_name]
-                        try:
-                            if field_type == int or (hasattr(field_type,
-                                                             "__origin__") and field_type.__origin__ == Optional and int in field_type.__args__):
-                                kwargs[field_name] = int(values[i]) if values[i] != "None" else None
-                            else:
-                                kwargs[field_name] = values[i]
-                        except (ValueError, IndexError):
-                            for c in cls.__mro__:
-                                if hasattr(c, field_name):
-                                    kwargs[field_name] = getattr(c, field_name)
-                                    break
-                instance = cls(**kwargs)
-            except Exception as e:
-                raise ValueError(f"Cannot unpack callback data: {value}. Error: {str(e)}")
+            parts = value.split(":")
+            parts.insert(1, '.')
+            value = ":".join(parts)
+            instance = cls.unpack(value)
 
         if additional_value is not None:
             instance.additional_values = additional_value
@@ -119,6 +92,7 @@ class CalendarCallback(ModCallbackData, prefix="calendar"):
     type_calendar: str = "event"
     year: int
     month: int
+    city_id: Optional[int] = None
 
     def pack_event_by_next_month(self):
         return self.copy(update={"month": self.month + 1}).wrap()
@@ -131,3 +105,4 @@ class EventsByDateCallback(PaginationCallback, prefix="events_by_date"):
     year: int
     month: int
     day: int
+    city_id: Optional[int] = None

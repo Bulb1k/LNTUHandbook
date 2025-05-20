@@ -1,6 +1,8 @@
 CHOICE_CITY = "*🌆 Оберіть місто, в якому бажаєте оглянути театри*"
 CHOICE_VENUE = "*🎭 Оберіть місце, в яке бажаєте піти*"
 CHOICE_EVENT = "*🎭 Оберіть виставу, яку хочете відвідати*"
+CHOICE_EVENT_BY_CITY = "*🎭 Оберіть виставу*\n\nМісто: `{city}`"
+CHOICE_EVENT_BY_VENUE = "*🎭 Оберіть виставу*\n\nМісце проведення: `{venue}`"
 CHOICE_SCHEDULE_EVENT = """
 *🎭 {name}*
 

@@ -92,9 +92,10 @@ def build_calendar_keyboard(
             "callback_data": callback_calendar.wrap()
         },
     ]
-    for action in type_calendar:
-        actions.append(action)
-    schema.append(2)
+    # for action in type_calendar:
+    #     actions.append(action)
+    # schema.append(2)
+    print(navigation_actions)
 
     keyboard = InlineConstructor.create_kb(actions, schema)
 

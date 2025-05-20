@@ -1,7 +1,8 @@
 🎭 {{ event.get('title') }}
 
-Дата: {{ event.get('date') }}
-Квитки: {{ event.get('min_ticket_price') }}-{{ event.get('max_ticket_price') }} грн
+Дата: `{{ event.get('date') }}`
+Квитки: `{{ event.get('min_ticket_price') }}`-`{{ event.get('max_ticket_price') }}` грн
+Місце проведення: `{{ event.get('venue_name') }}`
 
 {% if event.get('has_free_seats') %} Вільні місця ще є!
 {% else %} Вибачте, але всі квитки розкуплені. {% endif %}
