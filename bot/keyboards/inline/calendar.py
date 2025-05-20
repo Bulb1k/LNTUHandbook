@@ -61,7 +61,7 @@ def build_calendar_keyboard(
 
         actions.append({
             "text": f"{is_have_event} {day}",
-            "callback_data": callback_data
+            "callback_data": callback_data if is_have_event != "⚪️" else "alert_dont_have_event"
         })
 
     navigation_actions = [

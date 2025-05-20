@@ -6,6 +6,9 @@ from handlers.common.bot_calendar import Calendar
 from handlers.common.event import Event
 from datetime import datetime
 
+from texts import texts
+
+
 async def show_calendar(callback: types.CallbackQuery, state: FSMContext):
     callback_calendar = CalendarCallback.unwrap(callback.data)
 
@@ -35,3 +38,6 @@ async def show_events_by_date(callback: types.CallbackQuery, state: FSMContext):
         page=events_callback.page,
         callback_button_back=callback_calendar
     )
+
+async def alert_dont_have_event(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer(text=texts.asking.DONT_HAVE_EVENT, show_alert=True)
