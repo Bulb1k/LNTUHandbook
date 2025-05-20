@@ -5,7 +5,7 @@ import aiofiles
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State
 
-from dto.single import BearerTokenDto
+from dto.single import BearerTokenDto, CityIdDto
 from keyboards.inline import build_paginated_keyboard
 from keyboards.inline.callback import VenuesCallback, EventsCallback, SubActionCityCallback
 from state import CabinetState
@@ -65,13 +65,8 @@ class Venue(Pagination):
 
         callback_venues.additional_values = callback_button_back
 
-        response = await HttpUser.get_city_subscribe(BearerTokenDto(data.get('token')))
-        subscriptions_city = response.get('data', [])
-        is_subscriptions_city = False
-        for city in subscriptions_city:
-            if int(city.get('id')) == city_id:
-                is_subscriptions_city = True
-                break
+        response = await HttpUser.is_subscribe_city(CityIdDto(city_id), BearerTokenDto(data.get('token')))
+        is_subscriptions_city = response.get('is_subscribe')
 
         kb = build_paginated_keyboard(
             number_page={'max': pagination['last_page'], 'current': int(current_page)},

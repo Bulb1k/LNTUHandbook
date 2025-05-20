@@ -2,7 +2,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State
 
 from dto import EventDto
-from dto.single import BearerTokenDto
+from dto.single import BearerTokenDto, EventIdDto
 from keyboards.inline import build_paginated_keyboard, event_details_kb
 from keyboards.inline.callback import EventsCallback, EventDetailsCallback, EventsByDateCallback
 from services.http_client import HttpData, HttpUser
@@ -126,30 +126,19 @@ class Event(Pagination):
     ):
 
         data = await state.get_data()
-        event = None
-        for event in data.get("events", []):
-            if int(event.get('id')) == event_id:
-                event = event
-                break
-        else:
-            return
-
-        response = await HttpUser.get_subscribe(bearer_token=BearerTokenDto(data.get('token')))
+        response = await HttpData.get_event(event_id)
         if response.get('code') != 200:
             return await independent_message(texts.services.SERVICE_ERROR.format(error=response.get('message', '')))
+        event = response.get('data')
 
-        events_subscription = response.get('data', [])
-        for event_subscription in events_subscription:
-            if event_subscription.get('id') == event_id:
-                event['is_subscription'] = True
-                break
-        else:
-            event['is_subscription'] = False
+        response = await HttpUser.is_subscribe_event(data=EventIdDto(event_id), bearer_token=BearerTokenDto(data.get('token')))
+        if response.get('code') != 200:
+            return await independent_message(texts.services.SERVICE_ERROR.format(error=response.get('message', '')))
 
         kb = event_details_kb(
             event_url=event.get('concert_event_page') if event.get("custom_url") is None else event.get("custom_url"),
             event_id=event_id,
-            is_subscription=event['is_subscription'],
+            is_subscription=response.get("is_subscribe"),
             callback_button_back=callback_button_back
         )
 

@@ -137,6 +137,14 @@ class HttpUser(HttpClient):
     async def feed_back(cls, data: single_dto.MessageDto, bearer_token: single_dto.BearerTokenDto):
         return await cls.request(path='/feed_back', method='POST', data=data, headers=bearer_token.to_payload())
 
+    @classmethod
+    async def is_subscribe_city(cls, data: single_dto.CityIdDto, bearer_token: single_dto.BearerTokenDto):
+        return await cls.request(path=f'/is_city_subscribe/{data.city_id}', method='POST', data=data, headers=bearer_token.to_payload())
+
+    @classmethod
+    async def is_subscribe_event(cls, data: single_dto.EventIdDto, bearer_token: single_dto.BearerTokenDto):
+        return await cls.request(path=f'/is_subscribe/{data.event_id}', method='POST', data=data, headers=bearer_token.to_payload())
+
 class HttpData(HttpClient):
     base_url = '/data'
 
@@ -156,6 +164,10 @@ class HttpData(HttpClient):
     @classmethod
     async def get_events(cls, data: dto.EventDto):
         return await cls.request(path='/get_event', method='POST', data=data)
+
+    @classmethod
+    async def get_event(cls, event_id: int):
+        return await cls.request(path=f'/get_event/{event_id}', method='GET')
 
 
 
