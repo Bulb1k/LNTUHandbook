@@ -68,10 +68,10 @@ def build_calendar_keyboard(
         })
 
     actions.append({
-        "text": f"🌆 Вибрати місто" if city is None else f"🌆 м. {city.get("name")}",
+        "text": f"🌆 Вибрати місто" if city is None else f"🌆 м. {city.get('name')}",
         "callback_data": CitiesChoiceCallback(
             city_id=city.get("id") if city is not None else None,
-            page=city.get("current_page") if city is not None else None,
+            page=city.get("current_page") if city is not None else 1,
             additional_values=callback_calendar.wrap()
         ).wrap()
     })
