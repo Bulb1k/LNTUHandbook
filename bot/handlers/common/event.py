@@ -46,6 +46,7 @@ class Event(Pagination):
             venue_id=venue_id,
             full_date=full_date,
             page=current_page,
+            city_id=city_id
         ))
 
         if response.get('code') != 200:

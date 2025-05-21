@@ -55,6 +55,9 @@ class PaginationCallback(ModCallbackData, prefix="pagination"):
 class CitiesCallback(PaginationCallback, prefix="cities"):
     pass
 
+class CitiesChoiceCallback(PaginationCallback, prefix="cities_choice"):
+    city_id: Optional[int] = None
+
 # Venue callback
 class VenuesCallback(PaginationCallback, prefix="venues"):
     city_id: int

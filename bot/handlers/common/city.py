@@ -9,7 +9,7 @@ from pydantic.v1.errors import cls_kwargs
 from handlers.common.helper import independent_message
 from handlers.common.paginated import Pagination, PaginationCallback
 from keyboards.inline import choice_city_keyboard, build_paginated_keyboard
-from keyboards.inline.callback import CitiesCallback, VenuesCallback
+from keyboards.inline.callback import CitiesCallback, VenuesCallback, CitiesChoiceCallback
 from services.http_client import HttpData, HttpUser
 from state import StartState
 from texts import texts
@@ -32,7 +32,7 @@ class City(Pagination):
         cities = response.get('data', [])
         pagination = response.get('pagination')
 
-        if current_page > pagination['current_page'] or current_page <= 0:
+        if current_page > pagination['last_page'] or current_page <= 0:
             return
 
         callback_cities = CitiesCallback(
@@ -68,6 +68,65 @@ class City(Pagination):
 
         await state.update_data(
             cities=cities,
+            msg_for_delete=msg_for_delete
+        )
+
+
+    @classmethod
+    async def choice_city(cls,
+            state: FSMContext,
+            current_page: int = 1,
+            current_city_id: int = None,
+            custom_state: State = None,
+            callback_button_back: str = "main_menu",
+            **kwargs
+        ):
+        data = await state.get_data()
+
+        response = await HttpData.get_city(page=current_page)
+        if response.get('code') != 200:
+            return await independent_message(texts.services.SERVICE_ERROR.format(error=response.get('message', '')), **kwargs)
+        cities = response.get('data', [])
+        pagination = response.get('pagination')
+
+        if current_page > pagination['last_page'] or current_page <= 0:
+            return
+
+        callback_cities = CitiesChoiceCallback(
+            city_id=current_city_id,
+            additional_values=callback_button_back,
+            page=current_page
+        )
+
+        kb_cities_actions = [
+            {
+                "text": f"{city.get('name')} ✅" if city.get('id') == current_city_id else city.get('name'),
+                "callback_data": CitiesChoiceCallback(
+                    city_id=city.get('id'),
+                    additional_values=callback_button_back,
+                    page=current_page
+                ).wrap()
+            } for city in cities
+        ]
+
+        kb = build_paginated_keyboard(
+            number_page={'max': pagination['last_page'], 'current': int(current_page)},
+            items=kb_cities_actions,
+            navigation_callbacks={
+                "previous": callback_cities.pack_event_by_previous_page(),
+                "next": callback_cities.pack_event_by_next_page()
+            },
+            additional_buttons=[{"text": texts.keyboards.BACK, "callback_data": callback_button_back}]
+        )
+
+        msg_for_delete = data.get('msg_for_delete', [])
+        msgs = await cls.send_message(reply_markup=kb, text=texts.asking.CHOICE_CITY, **kwargs)
+        msg_for_delete.append(msgs)
+
+        if custom_state is not None:
+            await state.set_state(custom_state)
+
+        await state.update_data(
             msg_for_delete=msg_for_delete
         )
 

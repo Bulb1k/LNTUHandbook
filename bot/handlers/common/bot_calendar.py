@@ -21,6 +21,7 @@ class Calendar(Pagination):
             cls,
             year: int = None,
             month: int = None,
+            city_id: int = None,
             type_calendar: str = "event",
             **kwargs
     ):
@@ -34,7 +35,8 @@ class Calendar(Pagination):
 
         calendar_date = datetime.strptime(f"{year}-{month}", "%Y-%m")
         response = await HttpData.get_events(EventDto(
-            date=calendar_date.strftime("%Y-%m")
+            date=calendar_date.strftime("%Y-%m"),
+            city_id=city_id,
         ))
         if response.get('code') != 200:
             return await independent_message(texts.services.SERVICE_ERROR.format(error=response.get('message', '')))
@@ -45,8 +47,25 @@ class Calendar(Pagination):
             if event_date.strftime("%Y-%m") == calendar_date.strftime("%Y-%m"):
                 day_status[event_date.day] = event.get("has_free_seats")
 
-        kb = build_calendar_keyboard(day_status, month, year, type_calendar)
+        city_filter = None
+        for page in range(5):
+            if (response := await HttpData.get_city(page=page+1)).get('code') != 200:
+                return await independent_message(
+                    texts.services.SERVICE_ERROR.format(error=response.get('message', '')), **kwargs
+                )
+            if not (cities := response.get('data', [])):
+                break
 
+            pagination = response.get('pagination')
+            for city in cities:
+                if city.get("id") == city_id:
+                    city_filter = city
+                    city_filter['current_page'] = pagination.get("current_page")
+                    break
+            if city_filter:
+                break
+
+        kb = build_calendar_keyboard(day_status, month, year, type_calendar, city_filter)
         await cls.send_message(text=texts.asking.CHOICE_DATA, reply_markup=kb, **kwargs)
 
 

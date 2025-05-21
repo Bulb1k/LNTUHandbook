@@ -3,11 +3,12 @@ from dataclasses import dataclass
 
 @dataclass
 class EventDto(AbstractDto):
-    def __init__(self, venue_id: int = None, page: int = 1, date: str = None, full_date: str = None):
+    def __init__(self, venue_id: int = None, page: int = 1, date: str = None, full_date: str = None, city_id: int = None):
         self.page = page
         self.venue_id = venue_id
         self.date = date
         self.full_date = full_date
+        self.city_id = city_id
 
     def to_payload(self) -> dict:
         return {
@@ -15,4 +16,5 @@ class EventDto(AbstractDto):
             'venue_id': self.venue_id,
             'date': self.date,
             'full_date': self.full_date,
+            'city_id': self.city_id
        }

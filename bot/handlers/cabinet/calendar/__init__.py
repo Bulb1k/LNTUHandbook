@@ -11,6 +11,7 @@ def prepare_router() -> Router:
     callback_list = [
         Handler(handlers.show_calendar, [F.data.startswith('calendar:'), ]),
         Handler(handlers.show_events_by_date, [F.data.startswith('events_by_date:'), ]),
+        Handler(handlers.choice_city, [F.data.startswith('cities_choice:'), ]),
         Handler(handlers.alert_dont_have_event, [F.data == 'alert_dont_have_event']),
     ]
 
