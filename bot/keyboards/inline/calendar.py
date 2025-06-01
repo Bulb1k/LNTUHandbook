@@ -20,11 +20,8 @@ CALENDAR_MONTHS = {
 }
 
 def build_calendar_keyboard(
-        days: Dict[int, bool | None],
         current_month: int,
         current_year: int,
-        type_calendar: str = 'event',
-        city: dict = None
     ):
 
     count_days = calendar.monthrange(current_year, current_month)[1]
@@ -33,49 +30,28 @@ def build_calendar_keyboard(
     if count_days%5 != 0:
         schema.append(int(count_days%5))
 
-    formating_days = {}
+    days = []
     for day in range(1, calendar.monthrange(current_year, current_month)[1]+1):
-        if days.get(day, None) is None:
-            formating_days[day] = "⚪️"
-        elif days.get(day):
-            formating_days[day] = "🟢"
-        elif not days.get(day):
-            formating_days[day] = "🔴"
+        days.append(days)
 
     callback_calendar = CalendarCallback(
         month=current_month,
         year=current_year,
-        type_calendar=type_calendar,
-        city_id=city.get("id") if city is not None else None,
     )
 
     actions = []
-    for day, is_have_event in formating_days.items():
-        if type_calendar == 'event':
-            callback_data = EventsByDateCallback(
-                day=day,
-                year=current_year,
-                month=current_month,
-                city_id=city.get("id") if city is not None else None,
-                additional_values=callback_calendar.wrap(),
-            ).wrap()
-        else:
-            raise TypeError
+    for day in days:
+        callback_data = EventsByDateCallback(
+            day=day,
+            year=current_year,
+            month=current_month,
+            additional_values=callback_calendar.wrap(),
+        ).wrap()
 
         actions.append({
-            "text": f"{is_have_event} {day}",
-            "callback_data": callback_data if is_have_event != "⚪️" else "alert_dont_have_event"
+            "text": f"{day}",
+            "callback_data": callback_data
         })
-
-    actions.append({
-        "text": f"🌆 Вибрати місто" if city is None else f"🌆 м. {city.get('name')}",
-        "callback_data": CitiesChoiceCallback(
-            city_id=city.get("id") if city is not None else None,
-            page=city.get("current_page") if city is not None else 1,
-            additional_values=callback_calendar.wrap()
-        ).wrap()
-    })
-    schema.append(1)
 
     navigation_actions = [
         {
@@ -98,25 +74,3 @@ def build_calendar_keyboard(
     keyboard = InlineConstructor.create_kb(actions, schema)
 
     return keyboard
-
-
-
-# print(navigation_actions)
-#
-# keyboard = InlineConstructor.create_kb(actions, schema)
-#
-# return keyboard
-#
-# type_calendar = [
-#     {
-#         "text": "✅ Театри" if type_calendar == "venue" else "Театри",
-#         "callback_data": callback_calendar.wrap()
-#     },
-#     {
-#         "text": "✅ Події" if type_calendar == "event" else "Події",
-#         "callback_data": callback_calendar.wrap()
-#     },
-# ]
-# for action in type_calendar:
-#     actions.append(action)
-# schema.append(2)

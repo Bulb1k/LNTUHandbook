@@ -4,11 +4,10 @@ from handlers import commands
 from aiogram.filters import Command
 
 def prepare_router() -> Router:
-
     router = Router()
 
     command_list = [
-        Handler(commands.command_support, [Command('support')]),
+
     ]
 
     for message in command_list:

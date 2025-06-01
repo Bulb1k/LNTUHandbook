@@ -37,7 +37,12 @@ async def lifespan(app: FastAPI):
         webhook_url = f"{SERVER_ADDRESS}{WEBHOOK_PATH}"
 
     logger.info("Webhook URL: %s", webhook_url)
-    await bot.set_webhook(url=webhook_url, drop_pending_updates=True)
+    await bot.set_webhook(
+        url=webhook_url,
+        drop_pending_updates=True,
+        allowed_updates=["message", "callback_query"]
+    )
+
     app.logger = app.logger if hasattr(app, "logger") else None
     yield
     # === shutdown ===

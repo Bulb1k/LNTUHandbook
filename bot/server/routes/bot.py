@@ -25,12 +25,12 @@ async def send_message(request: bot_schema.PushNotification):
     text = re.sub(r'</?(div|span)[^>]*>', '', text_html)
 
     if request.chat_id:
-        await bot.send_message(request.chat_id, text, parse_mode='HTML')
+        await bot.send_message(request.chat_id, text, parse_mode=request.parse_mode)
         success_ids.append(request.chat_id)
     elif request.chat_ids:
         for chat_id in request.chat_ids:
             try:
-                await bot.send_message(chat_id, text, parse_mode='HTML')
+                await bot.send_message(chat_id, text, parse_mode=request.parse_mode)
                 success_ids.append(chat_id)
             except Exception as e:
                 pass

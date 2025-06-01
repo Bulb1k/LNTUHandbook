@@ -6,6 +6,7 @@ class PushNotification(BaseModel):
     message_text: str
     chat_id: Optional[int] = Field(default=None)
     chat_ids: Optional[List[int]] = Field(default=None)
+    parse_mode: Optional[str] = Field(default='Markdown')
 
     @root_validator(pre=True)
     def check_chat_id_or_ids(cls, values):

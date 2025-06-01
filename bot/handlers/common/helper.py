@@ -4,8 +4,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
 from bot import bot
-from texts import texts
 from keyboards.default import menu_kb
+from texts import texts
 from state import CabinetState
 
 class Handler(NamedTuple):

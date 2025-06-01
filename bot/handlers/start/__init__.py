@@ -14,7 +14,11 @@ def prepare_router() -> Router:
     ]
 
     callback_list = [
-        Handler(handlers.end_auth, [StartState.waiting_city, F.data.startswith('city_')]),
+        # Handler(handlers.test, [F.data]),
+        Handler(handlers.choice_faculty, [F.data.startswith("faculties:")]),
+        Handler(handlers.choice_course, [F.data.startswith("courses:")]),
+        Handler(handlers.choice_study_group, [F.data.startswith("study_groups:")]),
+        Handler(handlers.confirm_study_group, [F.data.startswith("confirm_study_group:")]),
     ]
 
     for message in message_list:
