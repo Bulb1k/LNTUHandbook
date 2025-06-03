@@ -1,23 +1,12 @@
-from keyboards.inline.callback import StudyGroupsCallback, FacultiesCallback, CoursesCallback, \
-    ConfirmStudyGroupCallback
-from state import StartState
-from texts import texts
 from aiogram import types
 from aiogram.fsm.context import FSMContext
-from utils.json_manager import get_json
+
+from handlers.common.courses import Course
+from handlers.common.faculty import Faculty
 from handlers.common.helper import open_menu
 from handlers.common.study_group import StudyGroup
-from handlers.common.faculty import Faculty
-from handlers.common.courses import Course
+from keyboards.inline.callback import FacultiesCallback, CoursesCallback, StudyGroupsCallback, ConfirmStudyGroupCallback
 
-async def greeting(message: types.Message, state: FSMContext):
-    await message.answer(texts.start.GREETING)
-
-    await Faculty.show_faculties(
-        state,
-        vuz_id=11613,
-        message=message
-    )
 
 async def choice_faculty(callback: types.CallbackQuery, state: FSMContext):
     callback_data = FacultiesCallback.unwrap(callback.data)
@@ -73,6 +62,3 @@ async def confirm_study_group(callback: types.CallbackQuery, state: FSMContext):
 
     await callback.message.delete()
     await open_menu(state, message=callback.message)
-
-
-

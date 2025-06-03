@@ -4,9 +4,9 @@ from texts import keyboards
 menu_kb = DefaultConstructor.create_kb(
     actions=[
         keyboards.SCHEDULE,
-        keyboards.CLASSROOMS_BUILDINGS,
+        keyboards.LNTU_MAPS,
         keyboards.TEACHERS,
-        keyboards.DOCUMENTS_TEMPLATE,
+        keyboards.CONTACT,
         keyboards.SETTING
      ],
     schema=[1, 2, 2]

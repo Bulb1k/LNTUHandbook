@@ -5,7 +5,7 @@ BACK = "🔙 Назад"
 
 SCHEDULE = "🗓 Розклад зайннять"
 TEACHERS = "👨🏻‍🏫 Викладачі"
-CLASSROOMS_BUILDINGS = "📍 Карта ЛНТУ"
-DOCUMENTS_TEMPLATE = "📄 Документи"
-SETTING = "⚙️ Налаштування"
+LNTU_MAPS = "📍 Карта ЛНТУ"
+CONTACT = "📞 Контакти"
+EDITE_STUDY_GROUP = "⚙️ Змінити групу"
 

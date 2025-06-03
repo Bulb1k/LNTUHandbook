@@ -2,7 +2,7 @@ from typing import Dict
 import calendar
 from datetime import datetime
 from .consts import InlineConstructor
-from .callback import CalendarCallback, EventsByDateCallback, CitiesChoiceCallback
+from .callback import CalendarCallback, ScheduleCallback, ScheduleDetailsCallback
 
 CALENDAR_MONTHS = {
     1: "Січень",
@@ -32,7 +32,7 @@ def build_calendar_keyboard(
 
     days = []
     for day in range(1, calendar.monthrange(current_year, current_month)[1]+1):
-        days.append(days)
+        days.append(day)
 
     callback_calendar = CalendarCallback(
         month=current_month,
@@ -41,11 +41,11 @@ def build_calendar_keyboard(
 
     actions = []
     for day in days:
-        callback_data = EventsByDateCallback(
+        callback_data = ScheduleCallback(
             day=day,
             year=current_year,
             month=current_month,
-            additional_values=callback_calendar.wrap(),
+            # additional_values=callback_calendar.wrap(),
         ).wrap()
 
         actions.append({

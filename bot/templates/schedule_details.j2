@@ -1,0 +1,13 @@
+*📚 Розклад пари*
+
+🗓 Дата: `{{ data.get('full_date') }}`
+📅 День тижня: `{{ data.get('week_day') }}`
+⏰ Час: `{{ data.get('study_time') }}` (з `{{ data.get('study_time_begin') }}` до `{{ data.get('study_time_end') }}`)
+
+📖 Дисципліна: `{{ data.get('discipline') }}`
+📘 Тип заняття: `{{ data.get('study_type') }}`
+🏫 Аудиторія: `{{ data.get('cabinet') }}`
+👨‍🏫 Викладач: `{{ data.get('employee') }}`
+{% if data.get('study_subgroup') %}
+👥 Підгрупа: `{{ data.get('study_subgroup') }}`
+{% endif %}

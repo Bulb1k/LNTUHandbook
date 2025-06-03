@@ -1,7 +1,7 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.state import State
 
-from keyboards.inline.callback_data import ConfirmStudyGroupCallback, StudyGroupsCallback
+from keyboards.inline.callback import ConfirmStudyGroupCallback, StudyGroupsCallback
 from keyboards.inline.paginated import build_paginated_keyboard
 from state import CabinetState
 from datetime import datetime

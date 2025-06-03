@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from typing import Type, TypeVar, Optional
 
 from aiogram.filters.callback_data import CallbackData
@@ -56,6 +56,16 @@ class PaginationCallback(ModCallbackData, prefix="pagination"):
 class FacultiesCallback(PaginationCallback, prefix="faculties"):
     vuz_id: int
 
+class TeachersFacultiesCallback(PaginationCallback, prefix="teachers_faculties"):
+    pass
+
+class TeachersCallback(PaginationCallback, prefix="teachers"):
+    faculty_id: int
+
+class TeacherDetailsCallback(PaginationCallback, prefix="teacher_details"):
+    faculty_id: int
+    index: int
+
 class CoursesCallback(PaginationCallback, prefix="courses"):
     vuz_id: int
     faculty_id: str
@@ -70,6 +80,33 @@ class ConfirmStudyGroupCallback(PaginationCallback, prefix="confirm_study_group"
     faculty_id: str
     course: int
     study_group_id: str
+
+class ScheduleCallback(PaginationCallback, prefix="schedule"):
+    day: int
+    year: int
+    month: int
+
+class ScheduleDetailsCallback(ScheduleCallback, prefix="schedule_details"):
+    index: int
+
+class CalendarCallback(ModCallbackData, prefix="calendar"):
+    type_calendar: str = "schedule"
+    year: int
+    month: int
+
+    def pack_event_by_next_month(self):
+        return self.copy(update={"month": self.month + 1}).wrap()
+
+    def pack_event_by_previous_month(self):
+        return self.copy(update={"month": self.month - 1}).wrap()
+
+
+class StructureCallback(PaginationCallback, prefix="structures"):
+    category: str
+
+class StructureDetailsCallback(StructureCallback, prefix="structure_details"):
+    index: int
+
 
 
 
