@@ -7,6 +7,7 @@ from texts import texts
 from handlers.common.schedule import Schedule
 from handlers.common.teacher import Teacher
 from handlers.common.maps import Maps
+from handlers.common.faculty import Faculty
 from keyboards.inline.maps import choice_categories_kb
 from utils.template_engine import render_template
 
@@ -24,5 +25,9 @@ async def main_handler(message: types.Message, state: FSMContext):
     elif bt_action == texts.keyboards.CONTACT:
         template = render_template('contact_info.j2')
         await message.answer(text=template)
-    elif bt_action == texts.keyboards.SETTING:
-        await message.answer(text="Наразі налаштування не працюють але ви можите змінити факультет, групу ввівши /start")
+    elif bt_action == texts.keyboards.EDITE_STUDY_GROUP:
+        await Faculty.show_faculties(
+            state,
+            vuz_id=11613,
+            message=message,
+        )
