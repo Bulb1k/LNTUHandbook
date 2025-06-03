@@ -7,7 +7,7 @@ menu_kb = DefaultConstructor.create_kb(
         keyboards.LNTU_MAPS,
         keyboards.TEACHERS,
         keyboards.CONTACT,
-        keyboards.SETTING
+        keyboards.EDITE_STUDY_GROUP
      ],
     schema=[1, 2, 2]
 )
