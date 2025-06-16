@@ -25,6 +25,18 @@ services:
     depends_on:
       - redis
 
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    restart: always
+
   redis:
     image: redis:7.2.3-alpine
     ports:
