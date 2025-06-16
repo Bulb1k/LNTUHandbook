@@ -4,4 +4,6 @@ env = Env()
 env.read_env()
 
 DATABASE_URL = env.str("DATABASE_URL", "sqlite:///./users.db")
-ADMIN_SECRET = env.str("ADMIN_SECRET", "changeme")
+ADMIN_USERNAME = env.str("ADMIN_USERNAME", "admin")
+ADMIN_PASSWORD = env.str("ADMIN_PASSWORD", "password")
+SECRET_KEY = env.str("SECRET_KEY", "secret")

@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Admin Panel</title>
 </head>
-<body>
-    <h1>Registered Users</h1>
-    <table border="1">
-        <tr><th>ID</th><th>Telegram ID</th><th>Username</th><th>Full name</th></tr>
+<body class="bg-light">
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Registered Users</h1>
+        <a href="/logout" class="btn btn-secondary">Logout</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Telegram ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Full name</th>
+        </tr>
+        </thead>
+        <tbody>
         {% for user in users %}
         <tr>
             <td>{{ user.id }}</td>
@@ -16,6 +30,8 @@
             <td>{{ user.full_name or '' }}</td>
         </tr>
         {% endfor %}
+        </tbody>
     </table>
+</div>
 </body>
 </html>
