@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="mb-4">Registered Users</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Telegram ID</th>
+      <th>Username</th>
+      <th>Full name</th>
+      <th>Facultative</th>
+      <th>Course</th>
+      <th>Group</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.telegram_id }}</td>
+      <td>{{ user.username or '' }}</td>
+      <td>{{ user.full_name or '' }}</td>
+      <td>{{ user.facultative or '' }}</td>
+      <td>{{ user.course or '' }}</td>
+      <td>{{ user.group or '' }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
