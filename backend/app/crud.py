@@ -7,8 +7,8 @@ def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
 
-def get_user_by_telegram(db: Session, telegram_id: int):
-    return db.query(models.User).filter(models.User.telegram_id == telegram_id).first()
+def get_user_by_chat(db: Session, chat_id: int):
+    return db.query(models.User).filter(models.User.chat_id == chat_id).first()
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -26,9 +26,7 @@ def get_stats(db: Session):
 
 def create_user(db: Session, user: schemas.UserCreate):
     db_user = models.User(
-        telegram_id=user.telegram_id,
-        username=user.username,
-        full_name=user.full_name,
+        chat_id=user.chat_id,
         facultative=user.facultative,
         course=user.course,
         group=user.group,
@@ -37,3 +35,16 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_chat_ids_by_filters(
+    db: Session, facultative: str | None = None, course: str | None = None, group: str | None = None
+) -> list[int]:
+    query = db.query(models.User.chat_id)
+    if facultative:
+        query = query.filter(models.User.facultative == facultative)
+    if course:
+        query = query.filter(models.User.course == course)
+    if group:
+        query = query.filter(models.User.group == group)
+    return [row[0] for row in query.all()]

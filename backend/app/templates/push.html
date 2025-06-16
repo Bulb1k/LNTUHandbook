@@ -13,7 +13,22 @@
   </div>
   <div class="mb-3">
     <label class="form-label">Chat ID(s)</label>
-    <input name="chat_ids" class="form-control" placeholder="12345 or 123,456">
+    <input name="chat_ids" class="form-control" placeholder="12345,456" value="{{ chat_ids }}">
+    <div class="form-text">Leave empty to use filters or send to all users</div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Facultative</label>
+      <input name="facultative" class="form-control" value="{{ facultative }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Course</label>
+      <input name="course" class="form-control" value="{{ course }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Group</label>
+      <input name="group" class="form-control" value="{{ group }}">
+    </div>
   </div>
   <button class="btn btn-primary">Send</button>
 </form>

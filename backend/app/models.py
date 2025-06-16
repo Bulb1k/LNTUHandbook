@@ -7,9 +7,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    telegram_id = Column(Integer, unique=True, index=True, nullable=False)
-    username = Column(String, index=True)
-    full_name = Column(String, nullable=True)
+    chat_id = Column(Integer, unique=True, index=True, nullable=False)
     facultative = Column(String, nullable=True)
     course = Column(String, nullable=True)
     group = Column(String, nullable=True)

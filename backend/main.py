@@ -37,7 +37,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 @app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_telegram(db, telegram_id=user.telegram_id)
+    db_user = crud.get_user_by_chat(db, chat_id=user.chat_id)
     if db_user:
         raise HTTPException(status_code=400, detail="User already registered")
     return crud.create_user(db=db, user=user)
@@ -80,26 +80,47 @@ def admin_users(request: Request, db: Session = Depends(get_db)):
 def push_page(request: Request):
     if not request.session.get("auth"):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
-    return templates.TemplateResponse("push.html", {"request": request, "result": None, "error": "", "message_text": ""})
+    return templates.TemplateResponse(
+        "push.html",
+        {
+            "request": request,
+            "result": None,
+            "error": "",
+            "message_text": "",
+            "chat_ids": "",
+            "facultative": "",
+            "course": "",
+            "group": "",
+        },
+    )
 
 
 @app.post("/admin/push", response_class=HTMLResponse)
-def send_push(request: Request, message_text: str = Form(...), chat_ids: str = Form("")):
+def send_push(
+    request: Request,
+    message_text: str = Form(...),
+    chat_ids: str = Form(""),
+    facultative: str = Form(""),
+    course: str = Form(""),
+    group: str = Form(""),
+    db: Session = Depends(get_db),
+):
     if not request.session.get("auth"):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
 
-    if not chat_ids:
-        return templates.TemplateResponse(
-            "push.html",
-            {"request": request, "error": "Chat ID(s) required", "result": None, "message_text": message_text},
-        )
+    ids: list[int] = []
+    if chat_ids:
+        ids = [int(cid.strip()) for cid in chat_ids.split(",") if cid.strip()]
+    else:
+        ids = crud.get_chat_ids_by_filters(db, facultative or None, course or None, group or None)
+        if not ids:
+            ids = [u.chat_id for u in crud.get_users(db)]
 
-    ids = [cid.strip() for cid in chat_ids.split(",") if cid.strip()]
     payload = {"message_text": message_text}
     if len(ids) == 1:
-        payload["chat_id"] = int(ids[0])
+        payload["chat_id"] = ids[0]
     else:
-        payload["chat_ids"] = [int(i) for i in ids]
+        payload["chat_ids"] = ids
 
     try:
         resp = httpx.post(f"{BOT_API_URL}/push_notification", json=payload, timeout=10)
@@ -109,7 +130,16 @@ def send_push(request: Request, message_text: str = Form(...), chat_ids: str = F
 
     return templates.TemplateResponse(
         "push.html",
-        {"request": request, "result": result, "error": "", "message_text": message_text},
+        {
+            "request": request,
+            "result": result,
+            "error": "",
+            "message_text": message_text,
+            "chat_ids": chat_ids,
+            "facultative": facultative,
+            "course": course,
+            "group": group,
+        },
     )
 
 
