@@ -43,6 +43,14 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
+@app.put("/users/{chat_id}", response_model=schemas.User)
+def update_user(chat_id: int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
+    db_user = crud.update_user(db, chat_id=chat_id, data=user)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "error": ""})
@@ -74,6 +82,56 @@ def admin_users(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
     users = crud.get_users(db)
     return templates.TemplateResponse("users.html", {"request": request, "users": users})
+
+
+@app.get("/admin/users/{user_id}/edit", response_class=HTMLResponse)
+def edit_user_page(user_id: int, request: Request, db: Session = Depends(get_db)):
+    if not request.session.get("auth"):
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    user = crud.get_user(db, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return templates.TemplateResponse(
+        "edit_user.html",
+        {
+            "request": request,
+            "user": user,
+            "error": "",
+        },
+    )
+
+
+@app.post("/admin/users/{user_id}/edit", response_class=HTMLResponse)
+def edit_user(
+    user_id: int,
+    request: Request,
+    facultative: str = Form(""),
+    course: str = Form(""),
+    group: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    if not request.session.get("auth"):
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    db_user = crud.get_user(db, user_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    data = schemas.UserUpdate(
+        facultative=facultative or None,
+        course=course or None,
+        group=group or None,
+    )
+    crud.update_user(db, chat_id=db_user.chat_id, data=data)
+    return RedirectResponse("/admin/users", status_code=status.HTTP_302_FOUND)
+
+
+@app.post("/admin/users/{user_id}/delete")
+def delete_user(user_id: int, request: Request, db: Session = Depends(get_db)):
+    if not request.session.get("auth"):
+        return RedirectResponse("/login", status_code=status.HTTP_302_FOUND)
+    deleted = crud.delete_user(db, user_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="User not found")
+    return RedirectResponse("/admin/users", status_code=status.HTTP_302_FOUND)
 
 
 @app.get("/admin/push", response_class=HTMLResponse)

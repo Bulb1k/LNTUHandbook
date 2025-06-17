@@ -37,6 +37,29 @@ def create_user(db: Session, user: schemas.UserCreate):
     return db_user
 
 
+def update_user(db: Session, chat_id: int, data: schemas.UserUpdate):
+    db_user = get_user_by_chat(db, chat_id)
+    if not db_user:
+        return None
+    if data.facultative is not None:
+        db_user.facultative = data.facultative
+    if data.course is not None:
+        db_user.course = data.course
+    if data.group is not None:
+        db_user.group = data.group
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+
+def delete_user(db: Session, user_id: int):
+    db_user = get_user(db, user_id)
+    if db_user:
+        db.delete(db_user)
+        db.commit()
+    return db_user
+
+
 def get_chat_ids_by_filters(
     db: Session, facultative: str | None = None, course: str | None = None, group: str | None = None
 ) -> list[int]:

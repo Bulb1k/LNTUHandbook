@@ -13,6 +13,12 @@ class UserCreate(UserBase):
     pass
 
 
+class UserUpdate(BaseModel):
+    facultative: Optional[str] = None
+    course: Optional[str] = None
+    group: Optional[str] = None
+
+
 class User(UserBase):
     id: int
     model_config = ConfigDict(from_attributes=True)

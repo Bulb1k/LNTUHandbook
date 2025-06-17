@@ -9,6 +9,7 @@
       <th>Facultative</th>
       <th>Course</th>
       <th>Group</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,12 @@
       <td>{{ user.facultative or '' }}</td>
       <td>{{ user.course or '' }}</td>
       <td>{{ user.group or '' }}</td>
+      <td>
+        <a class="btn btn-sm btn-secondary" href="/admin/users/{{ user.id }}/edit">Edit</a>
+        <form method="post" action="/admin/users/{{ user.id }}/delete" style="display:inline-block;">
+          <button class="btn btn-sm btn-danger" onclick="return confirm('Delete user?');">Delete</button>
+        </form>
+      </td>
     </tr>
   {% endfor %}
   </tbody>

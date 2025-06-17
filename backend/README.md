@@ -5,8 +5,11 @@ Simple FastAPI backend providing an API and a Bootstrap-styled admin panel.
 ## Endpoints
 - `GET /users` - list registered users.
 - `POST /users` - register new user. Fields: `chat_id`, optional `facultative`, `course`, `group`.
+- `PUT /users/{chat_id}` - update an existing user's facultative, course or group.
 - `GET /admin` - dashboard with statistics.
-- `GET /admin/users` - list registered users.
+- `GET /admin/users` - list registered users with edit/delete actions.
+- `GET /admin/users/{id}/edit` and `POST /admin/users/{id}/edit` - edit a user's details.
+- `POST /admin/users/{id}/delete` - remove a user from the database.
 - `GET /admin/push` and `POST /admin/push` - send push notifications to the Telegram bot. Messages can be targeted to specific chat IDs or filtered by facultative, course, or group. If no filters are provided the message goes to all users.
 - `GET /login` and `POST /login` - admin authentication.
 - `GET /logout` - clear the session.
