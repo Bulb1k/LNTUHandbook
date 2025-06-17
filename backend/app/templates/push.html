@@ -1,35 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="mb-4">Send Push Notification</h1>
+<h1 class="mb-4">Надіслати сповіщення</h1>
 {% if result %}
-<div class="alert alert-info">Status: {{ result.status }}{% if result.sent_to %} (sent to {{ result.sent_to|length }} chats){% endif %}</div>
+<div class="alert alert-info">Статус: {{ result.status }}{% if result.sent_to %} (надіслано у {{ result.sent_to|length }} чатів){% endif %}</div>
 {% elif error %}
 <div class="alert alert-danger">{{ error }}</div>
 {% endif %}
 <form method="post" action="/admin/push">
   <div class="mb-3">
-    <label class="form-label">Message</label>
+    <label class="form-label">Повідомлення</label>
     <textarea name="message_text" class="form-control" rows="4" required>{{ message_text or '' }}</textarea>
   </div>
   <div class="mb-3">
-    <label class="form-label">Chat ID(s)</label>
+    <label class="form-label">Chat ID(и)</label>
     <input name="chat_ids" class="form-control" placeholder="12345,456" value="{{ chat_ids }}">
-    <div class="form-text">Leave empty to use filters or send to all users</div>
+    <div class="form-text">Залиште порожнім, щоб використати фільтри або надіслати всім користувачам</div>
   </div>
   <div class="row">
     <div class="col-md-4 mb-3">
-      <label class="form-label">Facultative</label>
+      <label class="form-label">Факультатив</label>
       <input name="facultative" class="form-control" value="{{ facultative }}">
     </div>
     <div class="col-md-4 mb-3">
-      <label class="form-label">Course</label>
+      <label class="form-label">Курс</label>
       <input name="course" class="form-control" value="{{ course }}">
     </div>
     <div class="col-md-4 mb-3">
-      <label class="form-label">Group</label>
+      <label class="form-label">Група</label>
       <input name="group" class="form-control" value="{{ group }}">
     </div>
   </div>
-  <button class="btn btn-primary">Send</button>
+  <button class="btn btn-primary">Відправити</button>
 </form>
 {% endblock %}

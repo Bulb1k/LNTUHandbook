@@ -4,6 +4,7 @@ Simple FastAPI backend providing an API and a Bootstrap-styled admin panel.
 
 ## Endpoints
 - `GET /users` - list registered users.
+- `GET /users/{chat_id}` - retrieve a single user by chat ID.
 - `POST /users` - register new user. Fields: `chat_id`, optional `facultative`, `course`, `group`.
 - `PUT /users/{chat_id}` - update an existing user's facultative, course or group.
 - `GET /admin` - dashboard with statistics.

@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="mb-4">Registered Users</h1>
+<h1 class="mb-4">Користувачі</h1>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>ID</th>
       <th>Chat ID</th>
-      <th>Facultative</th>
-      <th>Course</th>
-      <th>Group</th>
+      <th>Факультатив</th>
+      <th>Курс</th>
+      <th>Група</th>
       <th></th>
     </tr>
   </thead>
@@ -21,9 +21,9 @@
       <td>{{ user.course or '' }}</td>
       <td>{{ user.group or '' }}</td>
       <td>
-        <a class="btn btn-sm btn-secondary" href="/admin/users/{{ user.id }}/edit">Edit</a>
+        <a class="btn btn-sm btn-secondary" href="/admin/users/{{ user.id }}/edit">Редагувати</a>
         <form method="post" action="/admin/users/{{ user.id }}/delete" style="display:inline-block;">
-          <button class="btn btn-sm btn-danger" onclick="return confirm('Delete user?');">Delete</button>
+          <button class="btn btn-sm btn-danger" onclick="return confirm('Видалити користувача?');">Видалити</button>
         </form>
       </td>
     </tr>

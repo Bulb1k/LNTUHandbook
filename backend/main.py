@@ -35,6 +35,14 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_users(db, skip=skip, limit=limit)
 
 
+@app.get("/users/{chat_id}", response_model=schemas.User)
+def read_user(chat_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_chat(db, chat_id)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_user
+
+
 @app.post("/users", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_chat(db, chat_id=user.chat_id)
@@ -62,7 +70,7 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
         request.session["auth"] = True
         return RedirectResponse("/admin", status_code=status.HTTP_302_FOUND)
     return templates.TemplateResponse(
-        "login.html", {"request": request, "error": "Invalid credentials"}
+        "login.html", {"request": request, "error": "Невірний логін або пароль"}
     )
 
 
