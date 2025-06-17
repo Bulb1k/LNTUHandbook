@@ -1,5 +1,8 @@
+from http.client import responses
+
 from keyboards.inline.callback import StudyGroupsCallback, FacultiesCallback, CoursesCallback, \
     ConfirmStudyGroupCallback
+from services.http_client import HttpUser
 from state import StartState
 from texts import texts
 from aiogram import types
@@ -12,6 +15,10 @@ from handlers.common.courses import Course
 
 async def greeting(message: types.Message, state: FSMContext):
     await message.answer(texts.start.GREETING)
+
+    response = await HttpUser.get_user(chat_id=message.chat.id)
+    if response.get("code") is 200:
+        return await open_menu(state=state, message=message)
 
     await Faculty.show_faculties(
         state,
@@ -63,6 +70,7 @@ async def choice_study_group(callback: types.CallbackQuery, state: FSMContext):
 
 async def confirm_study_group(callback: types.CallbackQuery, state: FSMContext):
     callback_data = ConfirmStudyGroupCallback.unwrap(callback.data)
+    data = await state.get_data()
 
     await state.update_data(
         vuz_id=callback_data.vuz_id,
@@ -70,6 +78,36 @@ async def confirm_study_group(callback: types.CallbackQuery, state: FSMContext):
         study_group_id=callback_data.study_group_id,
         course=callback_data.course,
     )
+
+    name_study_group = ""
+    for study_group in data.get("study_groups"):
+        if study_group.get("Key") == callback_data.study_group_id:
+            name_study_group = study_group.get("Value")
+
+    name_facultative = ""
+    for facultative in data.get("faculties"):
+        if facultative.get("Key") == callback_data.faculty_id:
+            name_facultative = facultative.get("Value")
+
+    response = await HttpUser.get_user(chat_id=callback.from_user.id)
+    if response.get("code") is 200:
+        response = await HttpUser.update_user(
+            chat_id=callback.from_user.id,
+            data={
+                "group": name_study_group,
+                "course": str(callback_data.course),
+                "facultative": name_facultative
+            }
+        )
+    else:
+        response = await HttpUser.create_user(
+            {
+                "chat_id": callback.from_user.id,
+                "group": name_study_group,
+                "course": str(callback_data.course),
+                "facultative": name_facultative
+            }
+        )
 
     await callback.message.delete()
     await open_menu(state, message=callback.message)

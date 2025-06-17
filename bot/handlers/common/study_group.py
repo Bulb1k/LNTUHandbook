@@ -101,8 +101,10 @@ class StudyGroup(Pagination):
         if custom_state is not None:
             await state.set_state(custom_state)
 
+        print(study_groups[current_page - 1])
         await state.update_data(
-            msg_for_delete=msg_for_delete
+            msg_for_delete=msg_for_delete,
+            study_groups=study_groups[current_page - 1]
         )
 
 

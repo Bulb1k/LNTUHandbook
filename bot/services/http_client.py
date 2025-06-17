@@ -45,10 +45,10 @@ class HttpClient:
 
         url = f"{API_BACKEND_URL}{path}"
 
-        if data is not None:
-            data = data.to_payload()
-        elif data is None and method == "POST":
-            raise NotImplementedError
+        # if data is not None:
+        #     data = data.to_payload()
+        # elif data is None and method == "POST":
+        #     raise NotImplementedError
 
         is_form_data = kwargs.pop("is_form_data", False)
         if is_form_data and data:
@@ -87,5 +87,26 @@ class HttpClient:
             return obj
 
         return _process(result)
+
+class HttpUser(HttpClient):
+    base_url = '/users'
+
+    @classmethod
+    async def request(cls, method: str, path: str = '', data: AbstractDto | dict = None, headers: dict = None, **kwargs) -> dict:
+        path = f'{cls.base_url}{path}'
+        return await HttpClient.make_request(path=path, method=method, data=data, headers=headers, **kwargs)
+
+    @classmethod
+    async def create_user(cls, data: dict):
+        return await cls.request(method='POST', data=data)
+
+    @classmethod
+    async def get_user(cls, chat_id: int):
+        return await cls.request(path=f"/{chat_id}", method='GET')
+
+    @classmethod
+    async def update_user(cls, chat_id: int, data: dict):
+        return await cls.request(path=f"/{chat_id}", method='PUT', data=data)
+
 
 
