@@ -1,6 +1,8 @@
 # Backend
 
 Simple FastAPI backend providing an API and a Bootstrap-styled admin panel.
+The code is organized into routers under `app/routers` with shared dependencies in `app/dependencies.py`.
+
 
 ## Endpoints
 - `GET /users` - list registered users.
